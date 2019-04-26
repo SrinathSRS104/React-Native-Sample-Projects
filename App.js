@@ -1,140 +1,77 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity
+  TextInput,
+  Button,
+  TouchableHighlight,
+  Image,
+  Alert
 } from 'react-native';
 
+export default class LoginView extends Component {
 
-export default class App extends Component {
-
-  constructor() {
-    super()
-    this.state = {
-      resultText: "",
-      calculationText: ""
-  }
-  this.operations = ['DEL','*', '/', '-', '+']
+  constructor(props) {
+    super(props);
+    state = {
+      email   : '',
+      password: '',
     }
-
-  calculateResult() {
-    const text = this.state.resultText
-    
-    this.setState ({
-      calculationText: eval(text)
-    })
   }
 
-  validate(){
-    const text = this.state.resultText
+  onClickListener = () => {
 
-    switch(text.slice(-1)){
-      case '+':
-      case '-':
-      case '*':
-      case '/':
-        return false
-    }
-    return true
+    const { email, password } = this.state;
+
+    Alert.alert(
+      'Confirm Email!',
+      `Are you ${email}?`,
+      [
+        
+        {
+          text: 'No',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {text: 'Yes', onPress: () => console.log('OK Pressed')},
+      ],
+      {cancelable: false},
+    );
   }
-
-  buttonPressed(text) {
-
-    if (text == "=") {
-      return this.validate() && this.calculateResult()
-    }
-
-    this.setState({
-      resultText: this.state.resultText + text
-    })
-  }
-
-  operate(operation) {
-    switch(operation){
-      case 'DEL':
-          let text = this.state.resultText.split('')
-          text.pop()
-          this.setState({
-            resultText : text.join('')
-          })
-          break
-        case '+':
-        case '-':
-        case '*':
-        case '/':
-
-          const lastChar = this.state.resultText.split('').pop()
-
-          if (this.operations.indexOf(lastChar) > 0 ) return
-          if (this.state.text == "") return
-            this.setState({
-              resultText: this.state.resultText + operation
-            })
-          
-    } 
-  }
-
 
   render() {
-
-    // for loop for numbers
-    let rows = []
-    let nums = [[1, 2, 3], [4, 5, 6], [7, 8, 9], ['.', 0, '=']]
-
-    for (let i = 0; i < 4; i++) {
-
-      let row = []
-
-      for (let j = 0; j < 3; j++) {
-        row.push(<TouchableOpacity onPress={() => this.buttonPressed(nums[i][j])} style={styles.btn}>
-          <Text style={styles.btnText}>{nums[i][j]}</Text>
-        </TouchableOpacity>)
-      }
-      rows.push(<View style={styles.row}>{row}</View>)
-    }
-
-    // for loop for operations
-    let ops = []
-    let operations = ['DEL','*', '/', '-', '+']
-
-    for (let i = 0; i < 5; i++) {
-      ops.push(<TouchableOpacity onPress={ () => this.operate(operations[i])}  style={styles.btn}>
-        <Text style={[styles.btnText, styles.white]}>{operations[i]}</Text>
-      </TouchableOpacity>)
-    }
-
     return (
       <View style={styles.container}>
-
-        <View style={styles.result}>
-          <Text style={styles.resultText}>{this.state.resultText}</Text>
+        <View style={styles.inputContainer}>
+          <Image style={styles.inputIcon} source={{uri: 'https://png.icons8.com/message/ultraviolet/50/3498db'}}/>
+          <TextInput style={styles.inputs}
+              placeholder="Email"
+              keyboardType="email-address"
+              underlineColorAndroid='transparent'
+              onChangeText={(email) => this.setState({email})}/>
+        </View>
+        
+        <View style={styles.inputContainer}>
+          <Image style={styles.inputIcon} source={{uri: 'https://png.icons8.com/key-2/ultraviolet/50/3498db'}}/>
+          <TextInput style={styles.inputs}
+              placeholder="Password"
+              secureTextEntry={true}
+              underlineColorAndroid='transparent'
+              onChangeText={(password) => this.setState({password})}/>
         </View>
 
-        <View style={styles.calculations}>
-          <Text style={styles.calculationText}> {this.state.calculationText} </Text>
-        </View>
+        <TouchableHighlight style={[styles.buttonContainer, styles.loginButton]} onPress={() => this.onClickListener()}>
+          <Text style={styles.loginText}>Login</Text>
+        </TouchableHighlight>
 
-        <View style={styles.buttons}>
+        <TouchableHighlight style={styles.buttonContainer} onPress={() => this.onClickListener('restore_password')}>
+            <Text>Forgot your password?</Text>
+        </TouchableHighlight>
 
-          <View style={styles.numbers}>
-            {rows}
-          </View>
-
-          <View style={styles.operations}>
-            {ops}
-          </View>
-
-        </View>
-
+        <TouchableHighlight style={styles.buttonContainer} onPress={() => this.onClickListener('register')}>
+            <Text>Register</Text>
+        </TouchableHighlight>
       </View>
     );
   }
@@ -143,72 +80,46 @@ export default class App extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-
-  calculationText: {
-    fontSize: 36,
-    color: 'white'
-  },
-
-  resultText: {
-    fontSize: 30,
-    color: 'white',
-  },
-
-  btnText: {
-    fontSize: 28
-  },
-
-  btn: {
-    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    alignSelf: 'stretch',
+    backgroundColor: '#DCDCDC',
+  },
+  inputContainer: {
+      borderBottomColor: '#F5FCFF',
+      backgroundColor: '#FFFFFF',
+      borderRadius:30,
+      borderBottomWidth: 1,
+      width:250,
+      height:45,
+      marginBottom:20,
+      flexDirection: 'row',
+      alignItems:'center'
+  },
+  inputs:{
+      height:45,
+      marginLeft:16,
+      borderBottomColor: '#FFFFFF',
+      flex:1,
+  },
+  inputIcon:{
+    width:30,
+    height:30,
+    marginLeft:15,
     justifyContent: 'center'
   },
-
-  white: {
-    color: 'white'
-  },
-
-  row: {
+  buttonContainer: {
+    height:45,
     flexDirection: 'row',
-    flex: 1,
-    justifyContent: 'space-around',
-    alignItems: 'center'
-  },
-
-  btn: {
-
-  },
-
-  operations: {
-    flex: 1,
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'orange'
+    marginBottom:20,
+    width:250,
+    borderRadius:30,
   },
-
-  result: {
-    flex: 2,
-    backgroundColor: '#cccccc',
-    justifyContent: 'center',
-    alignItems: 'flex-end'
+  loginButton: {
+    backgroundColor: "#00b5ec",
   },
-
-  calculations: {
-    flex: 1,
-    backgroundColor: 'grey',
-    justifyContent: 'center',
-    alignItems: 'flex-end'
-  },
-
-  buttons: {
-    flex: 6,
-    flexDirection: 'row'
-  },
-
-  numbers: {
-    flex: 3,
-    backgroundColor: 'green'
+  loginText: {
+    color: 'white',
   }
 });
