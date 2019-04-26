@@ -1,214 +1,130 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
+import React, { Component } from "react";
 
-import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity
-} from 'react-native';
+  FlatList,
+  AsyncStorage,
+  Button,
+  TextInput,
+  Keyboard,
+  Platform
+} from "react-native";
 
+const isAndroid = Platform.OS == "android";
+const viewPadding = 10;
 
-export default class App extends Component {
+export default class TodoList extends Component {
+  state = {
+    tasks: [],
+    text: ""
+  };
 
-  constructor() {
-    super()
-    this.state = {
-      resultText: "",
-      calculationText: ""
-  }
-  this.operations = ['DEL','*', '/', '-', '+']
+  changeTextHandler = text => {
+    this.setState({ text: text });
+  };
+
+  addTask = () => {
+    let notEmpty = this.state.text.trim().length > 0;
+
+    if (notEmpty) {
+      this.setState(
+        prevState => {
+          let { tasks, text } = prevState;
+          return {
+            tasks: "",
+            text: ""
+          };
+        },
+        
+      );
     }
+  };
 
-  calculateResult() {
-    const text = this.state.resultText
-    
-    this.setState ({
-      calculationText: eval(text)
-    })
+  componentDidMount() {
+    Keyboard.addListener(
+      isAndroid ? "keyboardDidShow" : "keyboardWillShow",
+      e => this.setState({ viewPadding: e.endCoordinates.height + viewPadding })
+    );
+
+    Keyboard.addListener(
+      isAndroid ? "keyboardDidHide" : "keyboardWillHide",
+      () => this.setState({ viewPadding: viewPadding })
+    );
+
+
   }
-
-  validate(){
-    const text = this.state.resultText
-
-    switch(text.slice(-1)){
-      case '+':
-      case '-':
-      case '*':
-      case '/':
-        return false
-    }
-    return true
-  }
-
-  buttonPressed(text) {
-
-    if (text == "=") {
-      return this.validate() && this.calculateResult()
-    }
-
-    this.setState({
-      resultText: this.state.resultText + text
-    })
-  }
-
-  operate(operation) {
-    switch(operation){
-      case 'DEL':
-          let text = this.state.resultText.split('')
-          text.pop()
-          this.setState({
-            resultText : text.join('')
-          })
-          break
-        case '+':
-        case '-':
-        case '*':
-        case '/':
-
-          const lastChar = this.state.resultText.split('').pop()
-
-          if (this.operations.indexOf(lastChar) > 0 ) return
-          if (this.state.text == "") return
-            this.setState({
-              resultText: this.state.resultText + operation
-            })
-          
-    } 
-  }
-
 
   render() {
-
-    // for loop for numbers
-    let rows = []
-    let nums = [[1, 2, 3], [4, 5, 6], [7, 8, 9], ['.', 0, '=']]
-
-    for (let i = 0; i < 4; i++) {
-
-      let row = []
-
-      for (let j = 0; j < 3; j++) {
-        row.push(<TouchableOpacity onPress={() => this.buttonPressed(nums[i][j])} style={styles.btn}>
-          <Text style={styles.btnText}>{nums[i][j]}</Text>
-        </TouchableOpacity>)
-      }
-      rows.push(<View style={styles.row}>{row}</View>)
-    }
-
-    // for loop for operations
-    let ops = []
-    let operations = ['DEL','*', '/', '-', '+']
-
-    for (let i = 0; i < 5; i++) {
-      ops.push(<TouchableOpacity onPress={ () => this.operate(operations[i])}  style={styles.btn}>
-        <Text style={[styles.btnText, styles.white]}>{operations[i]}</Text>
-      </TouchableOpacity>)
-    }
-
     return (
-      <View style={styles.container}>
-
-        <View style={styles.result}>
-          <Text style={styles.resultText}>{this.state.resultText}</Text>
-        </View>
-
-        <View style={styles.calculations}>
-          <Text style={styles.calculationText}> {this.state.calculationText} </Text>
-        </View>
-
-        <View style={styles.buttons}>
-
-          <View style={styles.numbers}>
-            {rows}
-          </View>
-
-          <View style={styles.operations}>
-            {ops}
-          </View>
-
-        </View>
-
+      <View
+        style={[styles.container, { paddingBottom: this.state.viewPadding }]}
+      >
+        <FlatList
+          style={styles.list}
+          data={this.state.tasks}
+          renderItem={({ item, index }) =>
+            <View>
+              <View style={styles.listItemCont}>
+                <Text style={styles.listItem}>
+                  {item.text}
+                </Text>
+                <Button title="X" onPress={} />
+              </View>
+              <View style={styles.hr} />
+            </View>}
+        />
+        <TextInput
+          style={styles.textInput}
+          onChangeText={this.changeTextHandler}
+          onSubmitEditing={this.addTask}
+          value={this.state.text}
+          placeholder="Add Tasks"
+          returnKeyType="done"
+          returnKeyLabel="done"
+        />
       </View>
     );
   }
 }
 
+let Tasks = {
+ 
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F5FCFF",
+    padding: viewPadding,
+    paddingTop: 20
   },
-
-  calculationText: {
-    fontSize: 36,
-    color: 'white'
+  list: {
+    width: "100%"
   },
-
-  resultText: {
-    fontSize: 30,
-    color: 'white',
+  listItem: {
+    paddingTop: 2,
+    paddingBottom: 2,
+    fontSize: 18
   },
-
-  btnText: {
-    fontSize: 28
+  hr: {
+    height: 1,
+    backgroundColor: "gray"
   },
-
-  btn: {
-    flex: 1,
-    alignItems: 'center',
-    alignSelf: 'stretch',
-    justifyContent: 'center'
+  listItemCont: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between"
   },
-
-  white: {
-    color: 'white'
-  },
-
-  row: {
-    flexDirection: 'row',
-    flex: 1,
-    justifyContent: 'space-around',
-    alignItems: 'center'
-  },
-
-  btn: {
-
-  },
-
-  operations: {
-    flex: 1,
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    backgroundColor: 'orange'
-  },
-
-  result: {
-    flex: 2,
-    backgroundColor: '#cccccc',
-    justifyContent: 'center',
-    alignItems: 'flex-end'
-  },
-
-  calculations: {
-    flex: 1,
-    backgroundColor: 'grey',
-    justifyContent: 'center',
-    alignItems: 'flex-end'
-  },
-
-  buttons: {
-    flex: 6,
-    flexDirection: 'row'
-  },
-
-  numbers: {
-    flex: 3,
-    backgroundColor: 'green'
+  textInput: {
+    height: 40,
+    paddingRight: 10,
+    paddingLeft: 10,
+    borderColor: "gray",
+    borderWidth: isAndroid ? 0 : 1,
+    width: "100%"
   }
 });
