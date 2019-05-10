@@ -13,7 +13,8 @@ import {
 import FlatListData from '../data/FlatListData'
 import RF from "react-native-responsive-fontsize"
 import Swipeout from 'react-native-swipeout'
-import Icon from "react-native-vector-icons/FontAwesome5";
+import Icon from "react-native-vector-icons/FontAwesome5"
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 
 
 class FlatListItem extends Component {
@@ -97,7 +98,7 @@ class FlatListItem extends Component {
                     <Image
                         source = {{uri : this.props.item.imageURL}}
                         //style = {{ width : Dimensions.get('window').width / 2, height : Dimensions.get('window').width / 2.4, margin : 5 }}>
-                        style = {{ alignItems:'flex-start', width : Dimensions.get('window').width / 3,height: Dimensions.get('window').width / 4, margin : 5 }}>
+                        style = {{ alignItems:'flex-start' , width: wp('40%') ,height: wp('30%') , margin : 5 }}>
                     </Image>
                     <View style={{flex:1}}>
                         <Text style={styles.FlatListItem}> {this.props.item.name} </Text> 
@@ -142,7 +143,7 @@ class BasicFlatList extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <View style={{flexDirection:'row', height: Dimensions.get('window').width / 8, alignItems:'center',backgroundColor:'white'}}>
+                <View style={{flexDirection:'row', /* height: Dimensions.get('window').width / 8, */ alignItems:'center',backgroundColor:'white'}}>
                     {/* <Image source={{uri:'https://upload.wikimedia.org/wikipedia/sco/d/d2/Pizza_Hut_logo.svg'}} style={{height:40,width:40}}/> */}
                     <Icon name="pizza-slice" style={{color:'tomato', fontSize: RF(4), paddingLeft: 10 ,paddingRight:5}}/>
                     <Text style={{fontSize: RF(4), color:'tomato', fontWeight: '500'}}> Pizza </Text>
@@ -170,7 +171,8 @@ export default BasicFlatList;
 
 const styles = StyleSheet.create({
     container :{
-        flex: 1
+        flex: 1,
+        alignItems : 'stretch'
     },
     FlatListItem : {
         color : 'white',

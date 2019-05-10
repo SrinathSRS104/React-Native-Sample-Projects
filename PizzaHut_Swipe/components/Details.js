@@ -5,7 +5,10 @@ import {
     StyleSheet,
     Image
 } from "react-native";
-import { createStackNavigator, createAppContainer } from "react-navigation";
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
+import RF from "react-native-responsive-fontsize"
+
+
 class Details extends Component {
     
     render() {
@@ -18,7 +21,7 @@ class Details extends Component {
         return (
             <View style={styles.container}>
                 <Text style={styles.name}>{name}</Text>
-                <Image source={{uri : url}} style={{height:200,width:200}}/>
+                <Image source={{uri : url}} style={{height:hp('50%'),width:wp('80%')}}/>
                 <Text style={styles.price}>{price}</Text>
             </View>
         );
@@ -33,12 +36,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     name : {
-        fontSize : 30,
+        fontSize : RF(6),
         color: '#6A6A6A',
         fontWeight : '800'
     },
     price : {
-        fontSize : 40,
+        fontSize : RF(8),
         color : 'tomato',
         fontWeight : '500'
     }

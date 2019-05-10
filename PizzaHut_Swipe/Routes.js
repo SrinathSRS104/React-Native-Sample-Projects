@@ -6,6 +6,7 @@ import Home from "./components/BasicFlatList";
 import Details from "./components/Details";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import RF from "react-native-responsive-fontsize"
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 
 const getTabBarIcon = (navigation, focused, tintColor) => {
   const { routeName } = navigation.state;
@@ -18,7 +19,7 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
   }
 
   // You can return any component that you like here!
-  return <IconComponent name={iconName} size={RF(7)} color={tintColor}  />;
+  return <IconComponent name={iconName} size={RF(5)} color={tintColor}  />;
 };
 
 const AppNavigator = createBottomTabNavigator(
@@ -35,10 +36,10 @@ const AppNavigator = createBottomTabNavigator(
     }),
     tabBarOptions: {
       labelStyle: {
-        fontSize: RF(3),
+        fontSize: RF(2.5),
       },
       style: {
-        height : Dimensions.get('window').height/9,
+        height : hp('8%'),
       },
         activeTintColor: 'tomato',
         inactiveTintColor: 'gray',
