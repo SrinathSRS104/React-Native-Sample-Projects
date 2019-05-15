@@ -1,0 +1,128 @@
+/* html, body { background-color: #FF0000; } */
+
+
+.masterDiv {
+  width : 60%;
+  margin : auto;
+  height : 500px;
+  border : solid #ccc 1px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.navDiv {
+  padding: 10px;
+}
+
+.imageBox {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width : 50%
+}
+
+.container {
+  /* background-image: linear-gradient(90deg, red, blue); */
+  display : flex;
+  flex-direction: row;
+  height : 500px
+}
+
+.nav {
+  flex : 1;
+  background-color: aliceblue;
+  height : 450px;
+}
+
+.bodyIn {
+  flex : 5;
+  border: 1 #ccc;
+  padding: 10px;
+  overflow: auto;
+  align-items: center;
+  justify-content: center
+}
+
+    .bodyIn {
+      padding : 10px;
+    }
+
+    .bodyTitle {
+      text-align: center
+    }
+
+/* .footer {
+    position: absolute;
+    width: 850px;
+}
+
+    .footerTitle {
+      text-align: end;
+    }
+ */
+
+
+    /* Media Queries*/
+    
+  @media only screen and (max-width: 1500px) {
+    /* For mobile phones: */
+    .masterDiv {
+      flex : 1;
+      width : 95%;
+      margin : auto;
+      border : solid #ccc 1px;
+      padding: 10px;
+      margin-top: 5px;
+      height : 96vh;
+    }
+
+    .blue {
+      font-size: 26px;
+    }
+/*     .footer {
+      position: absolute;
+  }
+
+  .footerTitle {
+    text-align: end
+  } */
+
+  .bodyIn {
+    height: 90vh;
+  }
+  
+  .container {
+    height : 96vh;
+  }
+}
+
+
+@media only screen and (max-width: 375px) {
+  /* For mobile phones: */
+  .masterDiv {
+    flex : 1;
+
+    margin : auto;
+    border : solid #ccc 1px;
+    padding: 10px;
+    margin-top: 5px;
+    height : 96vh;
+  }
+
+  .blue {
+    font-size: 26px;
+  }
+/*   .footer {
+    position: absolute;
+    width: 300px;
+    margin:0;
+} */
+
+.bodyIn {
+  height: 90vh;
+}
+
+.container {
+  height : 96vh;
+}
+}
