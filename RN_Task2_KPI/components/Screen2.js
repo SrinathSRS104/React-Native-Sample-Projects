@@ -10,6 +10,7 @@ class Screen2 extends Component {
     static navigationOptions = {
         // headerTitle instead of title
         headerTitle: "Calls",
+        headerLayoutPreset: 'center'
       };
     
     render() {

@@ -9,86 +9,126 @@ import {
     TouchableOpacity
 } from "react-native";
 
-import Icon from "react-native-vector-icons/AntDesign";
-
-const column = 2;
+import Icon from "react-native-vector-icons/Feather";
+import StackTopTitle from "./StackTopTitle"
+const data = [
+    {
+        "id": 1,
+        "iconName" : "phone-incoming",
+        "title" : "Total ACD Calls",
+        "time" : "20:10",
+        "type" : 'Incoming'
+    },
+    {
+        "id": 2,
+        "iconName" : "award",
+        "title" : "Total Clean Call Landed Inbound",
+        "time" : "00:10",
+        "type" : 'Incoming'
+    },
+    {
+        "id": 3,
+        "iconName" : "thumbs-up",
+        "title" : "Total Clean Call Outbound",
+        "time" : "2",
+        "type" : 'Incoming'
+    },
+    {
+        "id": 4,
+        "iconName" : "zap",
+        "title" : "Total Phantom Calls Landed Inbound",
+        "time" : "0",
+        "type" : 'Incoming'
+    },
+    {
+        "id": 5,
+        "iconName" : "phone-call",
+        "title" : "Total Outbound Talk Time",
+        "time" : "03:50",
+        "type" : 'Outgoing'
+    },
+    {
+        "id": 6,
+        "iconName" : "phone-outgoing",
+        "title" : "Total Outgoing Call",
+        "time" : "0",
+        "type" : 'Outgoing'
+    },
+    {
+        "id": 7,
+        "iconName" : "send",
+        "title" : "Average Speed of Answer",
+        time : "20:10",
+        "type" : 'utilities'
+    },
+    {
+        "id": 8,
+        "iconName" : "phone-missed",
+        "title" : "Total Tansfered Calls",
+        "time" : "1",
+        "type" : 'utilities'
+    }
+]
 
 class Screen1 extends Component {
 
     static navigationOptions = {
         // headerTitle instead of title
-        headerTitle: "Live KPIs",
+        headerTitle: <StackTopTitle/>,
         headerTitleStyle: {
-            textAlign: 'center',
-            alignSelf: 'center'
+                marginLeft : 70
         },
     };
 
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            loading: true,
-            dataSource: []
-        };
-    }
-
-
-    componentDidMount() {
-        fetch("https://jsonplaceholder.typicode.com/users")
-            .then(response => response.json())
-            .then((responseJson) => {
-                this.setState({
-                    loading: false,
-                    dataSource: responseJson
-                })
-            })
-            .catch(error => console.log(error))
-    }
-
-
-    FlatListItemSeparator = () => {
+    renderItem = ({item}) => {
+        if (item.type == "Incoming"){
+            condStyling = styles.incoming
+        } else if (item.type == "Outgoing"){
+            condStyling = styles.outgoing
+        } else {
+            condStyling = styles.utilities
+        }
         return (
-            <View style={{
-                height: 5,
-                width: "100%",
-                backgroundColor: "#F8F8F8",
-            }} />
-        )
-    }
-
-
-    renderItem = (data) =>
-        <View style={styles.item}>
-            <TouchableOpacity style={styles.list} /* onPress={() => this.props.navigation.navigate('View', {
-                id: data.item.id,
-                name: data.item.name,
-                phone: data.item.phone,
-                company: data.item.company.name
-            })} */>
-                <Text style={styles.lightText}>{data.item.name}</Text>
-                <Text style={styles.lightText}>{data.item.phone}</Text>
+            <TouchableOpacity style={[styles.list]}>
+                <Icon name={item.iconName} style={[styles.icon,condStyling]}/>
+                <View style={[styles.divider,condStyling]}><Text>  </Text></View>
+                <Text style={[styles.title,condStyling]}>
+                    {item.title}        
+                </Text>
+                <Text style={styles.time}>
+                    {item.time}
+                </Text>
             </TouchableOpacity>
-        </View>
+        )
+      }
 
 
     render() {
 
-        if (this.state.loading) {
+/*         if (this.state.loading) {
             return (
                 <View style={styles.loader}>
                     <ActivityIndicator size="large" color="#D959A5" />
                 </View>
             )
-        }
+        } */
 
         return (
             <View style={styles.container}>
+                <View style={styles.slaBar}>
+                    <View style={styles.text}>
+                        <Text style={{fontSize:18,fontWeight:'600'}}>SLA</Text>
+                    </View>
+                    <View style={styles.bar}>
+
+                    </View> 
+                </View>
                 <FlatList
-                    data={this.state.dataSource}
-                 //   ItemSeparatorComponent={this.FlatListItemSeparator}
-                    renderItem={item => this.renderItem(item)}
-                    keyExtractor={item => item.id.toString()} />
+                    style={styles.container}
+                    data={data}
+                    renderItem={this.renderItem}
+                    keyExtractor= {item=>item.id.toString()}
+                />
             </View>
         )
     }
@@ -99,8 +139,19 @@ export default Screen1;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor : '#F8F8F8',
-        alignItems : 'center'
+        backgroundColor : '#E5E5E5',
+       // alignItems : 'center'
+    },
+    slaBar : {
+        flex : 1,
+        backgroundColor : '#FFF',
+        maxHeight : 200,
+    },
+    text : {
+        justifyContent : 'flex-end'
+    },
+    bar : {
+
     },
     loader: {
         flex: 1,
@@ -110,18 +161,52 @@ const styles = StyleSheet.create({
     },
     list: {
         flex: 1,
-        padding : 20,
+        flexDirection : 'row',
+        padding : 10,
         backgroundColor :'#FFF',
-        borderRadius : 10
+        borderRadius : 10,
+        //borderWidth : 1,
+        alignItems : 'center',
+        margin : 6,
+
     },
-    item: {
-        flex: 1,
-        margin: 5,
-        width: Dimensions.get('window').width - 30
-    },
-    lightText: {
+    title: {
+        flex: 4,
+        width: Dimensions.get('window').width - 30,
+        alignItems : 'center',
         color: '#2D975A',
-        paddingLeft : 20,
-        fontSize : 20
-    }
+        fontSize : 18
+    },
+    icon : {
+        flex : 1,
+        fontSize : 50,
+        padding : 10,
+        //color: '#2D975A'
+        marginRight :6
+    },
+    time : {
+        flex : 2,
+        paddingLeft : 10,
+        fontSize : 30,
+        color: '#000',
+        textAlign : 'right'
+    },
+
+    divider : {
+        height : 70,
+        borderLeftWidth : 2,
+    },
+
+    incoming : {
+        color: '#F39C12',
+        borderLeftColor : '#F39C12'
+    },
+    outgoing : {
+        color: '#D959A5',
+        borderLeftColor : '#D959A5'
+    },
+    utilities : {
+        color: '#2D975A',
+        borderLeftColor : '#2D975A'
+    },
 });

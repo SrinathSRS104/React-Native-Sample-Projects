@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { View, Image, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 
 import { createDrawerNavigator, createStackNavigator, createAppContainer } from 'react-navigation';
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -10,32 +10,6 @@ import Screen1 from './components/Screen1';
 import Screen2 from './components/Screen2';
 import Screen3 from './components/Screen3';
 import Drawer from './components/Drawer';
-
-const getIcon = (navigation, focused, tintColor) => {
-  const { routeName } = navigation.state;
-  let IconComponent = Icon;
-  let iconName;
-  if (routeName === 'Screen1') {
-    iconName = `headset-mic`;
-  } else if (routeName === 'Screen2') {
-    iconName = `call`;
-  } else if (routeName === 'Screen3') {
-      iconName = `group`;
-  }
-  return <IconComponent name={iconName} size={24} color={tintColor} />;
-};
-
-const getLabel = (navigation) => {
-  const { routeName } = navigation.state;
-  if (routeName === 'Screen1') {
-    drLabel = "Live KPIs";
-  } else if (routeName === 'Screen2') {
-    drLabel = "Calls";
-  } else if (routeName === 'Screen3') {
-    drLabel = "Group";
-  }
-  return drLabel;
-};
 
 class NavigationDrawerStructure extends Component {
   //Structure for the navigatin Drawer
@@ -59,9 +33,11 @@ const FirstActivity_StackNavigator = createStackNavigator({
   //All the screen from the Screen1 will be indexed here
   First: {
     screen: Screen1,
+    headerLayoutPreset: 'center',
     navigationOptions: ({ navigation }) => ({
       title: 'Demo Screen 1',
       headerLeft: <NavigationDrawerStructure navigationProps={navigation} />,
+      headerRight:  <Icon name="settings" style={{fontSize:30,padding:20,color:'white'}}/>,
       headerStyle: {
         backgroundColor: '#D959A5',
       },
@@ -78,6 +54,7 @@ const Screen2_StackNavigator = createStackNavigator({
     navigationOptions: ({ navigation }) => ({
       title: 'Demo Screen 2',
       headerLeft: <NavigationDrawerStructure navigationProps={navigation} />,
+      headerRight:  <Icon name="settings" style={{fontSize:30,padding:20,color:'white'}}/>,
       headerStyle: {
         backgroundColor: '#D959A5',
       },
@@ -94,6 +71,7 @@ const Screen3_StackNavigator = createStackNavigator({
     navigationOptions: ({ navigation }) => ({
       title: 'Demo Screen 3',
       headerLeft: <NavigationDrawerStructure navigationProps={navigation} />,
+      headerRight:  <Icon name="settings" style={{fontSize:30,padding:20,color:'white'}}/>,
       headerStyle: {
         backgroundColor: '#D959A5',
       },
@@ -109,23 +87,7 @@ const DrawerNavigatorExample = createDrawerNavigator({
     Screen3: Screen3_StackNavigator,
 },
 {
-   // initialRouteName: 'Home',
-
-    defaultNavigationOptions: ({ navigation }) => ({
-      drawerLabel: getLabel(navigation),
-      drawerIcon: ({ focused, tintColor }) =>
-          getIcon(navigation, focused, tintColor),
-    }),
     contentComponent : Drawer,
-    drawerOptions: {
-      showLabel: false,
-      activeTintColor: '#5D6D7E',
-      inactiveTintColor: '#FFF',
-      style: {
-        backgroundColor: '#3498DB',
-        height : 45
-    },
-  }
 });
  
 export default createAppContainer(DrawerNavigatorExample);
