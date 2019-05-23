@@ -16,13 +16,14 @@ import Icon from "react-native-vector-icons/Feather";
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
-import SortableList from 'react-native-sortable-list';
+import SortableList from 'react-native-sortable-list'
+import DraggableFlatList from 'react-native-draggable-flatlist'
 
 import StackTopTitle from "./StackTopTitle"
 import ProBar from "./ProBar"
 
 
-const data = [
+const my_data = [
     {
         "id": 1,
         "iconName": "phone-incoming",
@@ -87,9 +88,84 @@ class Screen1 extends Component {
         super()
         this.state = {
             percentage: 58,
+            data : [
+                {
+                    "id": 1,
+                    "iconName": "phone-incoming",
+                    "title": "Total ACD Calls",
+                    "time": "20:10",
+                    "type": 'Incoming'
+                },
+                {
+                    "id": 2,
+                    "iconName": "award",
+                    "title": "Total Clean Call Landed Inbound",
+                    "time": "00:10",
+                    "type": 'Incoming'
+                },
+                {
+                    "id": 3,
+                    "iconName": "thumbs-up",
+                    "title": "Total Clean Call Outbound",
+                    "time": "2",
+                    "type": 'Incoming'
+                },
+                {
+                    "id": 4,
+                    "iconName": "zap",
+                    "title": "Total Phantom Calls Landed Inbound",
+                    "time": "0",
+                    "type": 'Incoming'
+                },
+                {
+                    "id": 5,
+                    "iconName": "phone-call",
+                    "title": "Total Outbound Talk Time",
+                    "time": "03:50",
+                    "type": 'Outgoing'
+                },
+                {
+                    "id": 6,
+                    "iconName": "phone-outgoing",
+                    "title": "Total Outgoing Call",
+                    "time": "0",
+                    "type": 'Outgoing'
+                },
+                {
+                    "id": 7,
+                    "iconName": "send",
+                    "title": "Average Speed of Answer",
+                    time: "20:10",
+                    "type": 'utilities'
+                },
+                {
+                    "id": 8,
+                    "iconName": "phone-missed",
+                    "title": "Total Tansfered Calls",
+                    "time": "1",
+                    "type": 'utilities'
+                }
+            ]
         }
     }
 
+    renderItem = ({ item, index, move, moveEnd, isActive }) => {
+        return (
+          <TouchableOpacity
+            style={{ 
+              height: 100, 
+              alignItems: 'center', 
+              justifyContent: 'center' 
+            }}
+            onLongPress={move}
+            onPressOut={moveEnd}
+          >
+            <Text>{this.state.data.title}</Text>
+            <Text>Sample</Text>
+          </TouchableOpacity>
+        )
+    }
+    
     static navigationOptions = {
         headerTitle: <StackTopTitle />,
         headerTitleStyle: {
@@ -122,101 +198,21 @@ class Screen1 extends Component {
                         <Text style={styles.barText}>{this.state.percentage}%</Text>
                     </View>
                 </View>
-                <SortableList
+                <DraggableFlatList
                     style={styles.container}
-                    data={data}
+                    data={this.state.data}
                     renderItem={this.renderItem}
-                    renderRow={this._renderRow}
+                   // renderRow={this._renderRow}
+                    keyExtractor={(item, index) => `draggable-item-${item.key}`}
+                    scrollPercent={5}
+                    onMoveEnd={({ data }) => this.setState({ data })}
                 />
             </View>
         )
     }
-
-    _renderRow = ({ data, active }) => {
-        return <Row data={data} active={active} />
-    }
 }
 
 export default Screen1;
-
-class Row extends Component {
-
-    constructor(props) {
-        super(props);
-
-        this._active = new Animated.Value(0);
-
-        this._style = {
-            ...Platform.select({
-                ios: {
-                    transform: [{
-                        scale: this._active.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [1, 1.1],
-                        }),
-                    }],
-                    shadowRadius: this._active.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [2, 10],
-                    }),
-                },
-
-                android: {
-                    transform: [{
-                        scale: this._active.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [1, 1.07],
-                        }),
-                    }],
-                    elevation: this._active.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [2, 6],
-                    }),
-                },
-            })
-        };
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (this.props.active !== nextProps.active) {
-            Animated.timing(this._active, {
-                duration: 300,
-                easing: Easing.bounce,
-                toValue: Number(nextProps.active),
-            }).start();
-        }
-    }
-
-    render() {
-        const { data, active } = this.props;
-
-        if (data.type == "Incoming") {
-            condStyling = styles.incoming
-        } else if (data.type == "Outgoing") {
-            condStyling = styles.outgoing
-        } else {
-            condStyling = styles.utilities
-        }
-
-        return (
-
-            <Animated.View style={[styles.list]}>
-                <Icon name={data.iconName} style={[styles.icon, condStyling]} />
-                <View style={[styles.divider, condStyling]}><Text>  </Text></View>
-                <Text style={[styles.title, condStyling]}>
-                    {data.title}
-                </Text>
-                <Text style={styles.time}>
-                    {data.time}
-                </Text>
-                <TouchableOpacity>
-                    <Icon2 name="dots-vertical" style={{ fontSize: 25 }} />
-                </TouchableOpacity>
-            </Animated.View>
-
-        );
-    }
-}
 
 const styles = StyleSheet.create({
     container: {
